@@ -3,7 +3,10 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import "./Navbar.css";
 
-export default function Navbar() {
+// LoginModal & user state are lifted to App; accept props
+
+
+export default function Navbar({ user, onLoginClick, onLogout }) {
   const { totalItems, dispatch } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -69,6 +72,36 @@ export default function Navbar() {
                 <span className="navbar__cart-badge">{totalItems}</span>
               )}
             </button>
+
+            {user ? (
+              <div className="navbar__user-menu">
+                <button className="navbar__user-btn" title={user.name}>
+                  <span className="navbar__user-avatar">
+                    {user.name?.charAt(0).toUpperCase() || "U"}
+                  </span>
+                  <span className="navbar__user-name">{user.name}</span>
+                </button>
+                <div className="navbar__user-dropdown">
+                  <div className="navbar__user-info">
+                    <p className="navbar__user-info-name">{user.name}</p>
+                    <p className="navbar__user-info-phone">{user.phone}</p>
+                  </div>
+                  <hr className="navbar__user-divider" />
+                  <button className="navbar__dropdown-item">👤 Hồ sơ</button>
+                  <button className="navbar__dropdown-item">📦 Đơn hàng</button>
+                  <button className="navbar__dropdown-item">🌿 Sản phẩm của tôi</button>
+                  <hr className="navbar__user-divider" />
+                  <button className="navbar__dropdown-item navbar__dropdown-item--logout" onClick={onLogout}>
+                    🚪 Đăng xuất
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button className="navbar__login-btn" onClick={onLoginClick}>
+                👤 Đăng Nhập
+              </button>
+            )}
+
             <button
               className="navbar__hamburger"
               onClick={() => setMenuOpen(o => !o)}

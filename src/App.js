@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import { ToastProvider } from "./context/ToastContext";
 import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import Footer from "./components/Footer";
+import LoginModal from "./components/LoginModal";
+import AIChatWidget from "./components/AIChatWidget";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -13,12 +15,25 @@ import About from "./pages/About";
 import "./styles/global.css";
 
 export default function App() {
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
   return (
     <BrowserRouter>
       <CartProvider>
         <ToastProvider>
-          <Navbar />
+          <Navbar
+            user={user}
+            onLoginClick={() => setLoginOpen(true)}
+            onLogout={() => setUser(null)}
+          />
           <Cart />
+          <LoginModal
+            isOpen={loginOpen}
+            onClose={() => setLoginOpen(false)}
+            onLogin={(u) => setUser(u)}
+          />
+          <AIChatWidget />
           <Routes>
             <Route path="/"              element={<Home />}          />
             <Route path="/products"      element={<Products />}      />
