@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useToast } from "../context/ToastContext";
+import { getShopByProductId } from "../data/shops";
 import "./ProductCard.css";
 
 function fmt(n) {
@@ -23,6 +24,7 @@ function Stars({ rating }) {
 export default function ProductCard({ product }) {
   const { dispatch } = useCart();
   const { addToast } = useToast();
+  const shop = getShopByProductId(product.id);
 
   function handleAdd(e) {
     e.preventDefault();
@@ -52,6 +54,16 @@ export default function ProductCard({ product }) {
       <div className="product-card__body">
         <p className="product-card__origin">📍 {product.origin}</p>
         <h3 className="product-card__name">{product.name}</h3>
+        {shop && (
+          <span
+            className="product-card__shop"
+            onClick={e => { e.preventDefault(); window.location.href = `/shop/${shop.id}`; }}
+            title={`Xem gian hàng: ${shop.name}`}
+          >
+            🏪 {shop.name}
+            {shop.verified && <span className="product-card__shop-check">✓</span>}
+          </span>
+        )}
         <div className="product-card__rating">
           <Stars rating={product.rating} />
           <span className="product-card__reviews">({product.reviews} đánh giá)</span>

@@ -12,6 +12,8 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import About from "./pages/About";
+import ShopPage from "./pages/ShopPage";
+import ShopDashboard from "./pages/ShopDashboard";
 import "./styles/global.css";
 
 export default function App() {
@@ -40,6 +42,8 @@ export default function App() {
             <Route path="/product/:id"   element={<ProductDetail />} />
             <Route path="/checkout"      element={<Checkout />}      />
             <Route path="/about"         element={<About />}         />
+            <Route path="/shop/:shopId"  element={<ShopPage />}      />
+            <Route path="/my-shop"       element={<ShopDashboard />} />
             <Route path="*"              element={
               <div style={{ textAlign: "center", padding: "100px 20px" }}>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--green-dark)" }}>

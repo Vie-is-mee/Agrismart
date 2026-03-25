@@ -50,6 +50,7 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
             <li><Link to="/products?category=vegetables">Rau Củ</Link></li>
             <li><Link to="/products?category=grains">Gạo & Ngũ Cốc</Link></li>
             <li><Link to="/about">Về Chúng Tôi</Link></li>
+            <li><Link to="/my-shop" className="navbar__shop-link">🏪 Gian Hàng</Link></li>
           </ul>
 
           <div className="navbar__actions">
@@ -89,7 +90,7 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
                   <hr className="navbar__user-divider" />
                   <button className="navbar__dropdown-item">👤 Hồ sơ</button>
                   <button className="navbar__dropdown-item">📦 Đơn hàng</button>
-                  <button className="navbar__dropdown-item">🌿 Sản phẩm của tôi</button>
+                  <Link to="/my-shop" className="navbar__dropdown-item navbar__dropdown-link">🏪 Gian Hàng Của Tôi</Link>
                   <hr className="navbar__user-divider" />
                   <button className="navbar__dropdown-item navbar__dropdown-item--logout" onClick={onLogout}>
                     🚪 Đăng xuất
@@ -149,6 +150,7 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
           <li><Link to="/products?category=herbs">🌿 Gia Vị & Thảo Mộc</Link></li>
           <li><Link to="/products?category=honey">🍯 Mật Ong</Link></li>
           <li><Link to="/about">ℹ️ Về Chúng Tôi</Link></li>
+          <li><Link to="/my-shop" className="mobile-shop-link">🏪 Gian Hàng Của Tôi</Link></li>
         </ul>
       </div>
       {menuOpen && <div className="mobile-overlay" onClick={() => setMenuOpen(false)} />}
