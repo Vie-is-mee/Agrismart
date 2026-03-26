@@ -13,7 +13,10 @@ export default function Cart() {
   return (
     <>
       {isOpen && (
-        <div className="cart-overlay" onClick={() => dispatch({ type: "CLOSE" })} />
+        <div
+          className="cart-overlay"
+          onClick={() => dispatch({ type: "CLOSE" })}
+        />
       )}
 
       <aside className={`cart-drawer ${isOpen ? "cart-drawer--open" : ""}`}>
@@ -44,36 +47,54 @@ export default function Cart() {
         ) : (
           <>
             <ul className="cart-items">
-              {items.map(item => (
+              {items.map((item) => (
                 <li key={item.id} className="cart-item">
-                  <img src={item.image} alt={item.name} className="cart-item__img" />
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="cart-item__img"
+                  />
                   <div className="cart-item__info">
                     <p className="cart-item__name">{item.name}</p>
                     <p className="cart-item__origin">📍 {item.origin}</p>
-                    <p className="cart-item__price">{fmt(item.price)}/{item.unit}</p>
+                    <p className="cart-item__price">
+                      {fmt(item.price)}/{item.unit}
+                    </p>
                   </div>
                   <div className="cart-item__controls">
                     <div className="qty-control">
                       <button
                         onClick={() =>
-                          dispatch({ type: "UPDATE_QTY", id: item.id, qty: item.qty - 1 })
+                          dispatch({
+                            type: "UPDATE_QTY",
+                            id: item.id,
+                            qty: item.qty - 1,
+                          })
                         }
-                      >−</button>
+                      >
+                        −
+                      </button>
                       <span>{item.qty}</span>
                       <button
                         onClick={() =>
-                          dispatch({ type: "UPDATE_QTY", id: item.id, qty: item.qty + 1 })
+                          dispatch({
+                            type: "UPDATE_QTY",
+                            id: item.id,
+                            qty: item.qty + 1,
+                          })
                         }
-                      >+</button>
+                      >
+                        +
+                      </button>
                     </div>
-                    <p className="cart-item__subtotal">{fmt(item.price * item.qty)}</p>
+                    <p className="cart-item__subtotal">
+                      {fmt(item.price * item.qty)}
+                    </p>
                     <button
                       className="cart-item__remove"
                       onClick={() => dispatch({ type: "REMOVE", id: item.id })}
                       aria-label="Xóa sản phẩm"
-                    >
-                      🗑️
-                    </button>
+                    ></button>
                   </div>
                 </li>
               ))}
@@ -82,11 +103,14 @@ export default function Cart() {
             <div className="cart-footer">
               {totalPrice < 500000 && (
                 <div className="cart-delivery-hint">
-                  🚚 Mua thêm {fmt(500000 - totalPrice)} để được <strong>miễn phí giao hàng</strong>!
+                  🚚 Mua thêm {fmt(500000 - totalPrice)} để được{" "}
+                  <strong>miễn phí giao hàng</strong>!
                   <div className="delivery-bar">
                     <div
                       className="delivery-bar__fill"
-                      style={{ width: `${Math.min((totalPrice / 500000) * 100, 100)}%` }}
+                      style={{
+                        width: `${Math.min((totalPrice / 500000) * 100, 100)}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -103,7 +127,12 @@ export default function Cart() {
               <Link
                 to="/checkout"
                 className="btn btn-primary"
-                style={{ width: "100%", justifyContent: "center", fontSize: "1.05rem", padding: "16px" }}
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  fontSize: "1.05rem",
+                  padding: "16px",
+                }}
                 onClick={() => dispatch({ type: "CLOSE" })}
               >
                 Tiến Hành Thanh Toán →

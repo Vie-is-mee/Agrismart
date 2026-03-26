@@ -14,12 +14,17 @@ const INITIAL_MESSAGES = [
 /* ── Popup component ── */
 function ListingPopup({ onClose, onConfirm }) {
   return (
-    <div className="ai-popup-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div
+      className="ai-popup-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="ai-popup">
         <div className="ai-popup__header">
           <div className="ai-popup__icon">✅</div>
           <h3 className="ai-popup__title">Phân Tích Hoàn Tất!</h3>
-          <p className="ai-popup__subtitle">AI đã nhận diện sản phẩm và gợi ý giá thị trường</p>
+          <p className="ai-popup__subtitle">
+            AI đã nhận diện sản phẩm và gợi ý giá thị trường
+          </p>
         </div>
 
         <div className="ai-popup__body">
@@ -51,7 +56,10 @@ function ListingPopup({ onClose, onConfirm }) {
 
           <div className="ai-popup__insight">
             <span className="ai-popup__insight-icon">📊</span>
-            <span>Giá thị trường hiện tại: <strong>13.000 – 17.000₫/kg</strong> — Mức gợi ý đang ở phân khúc cạnh tranh tốt.</span>
+            <span>
+              Giá thị trường hiện tại: <strong>13.000 – 17.000₫/kg</strong> —
+              Mức gợi ý đang ở phân khúc cạnh tranh tốt.
+            </span>
           </div>
         </div>
 
@@ -86,7 +94,10 @@ export default function AIChatWidget() {
   }, [messages, analyzing]);
 
   function now() {
-    return new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+    return new Date().toLocaleTimeString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   }
 
   function sendText(e) {
@@ -94,17 +105,20 @@ export default function AIChatWidget() {
     const text = input.trim();
     if (!text) return;
     const msg = { id: Date.now(), role: "user", text, time: now() };
-    setMessages(m => [...m, msg]);
+    setMessages((m) => [...m, msg]);
     setInput("");
 
     // Fake AI reply
     setTimeout(() => {
-      setMessages(m => [...m, {
-        id: Date.now() + 1,
-        role: "ai",
-        text: "Cảm ơn bạn! Để định giá chính xác hơn, vui lòng gửi ảnh sản phẩm bằng nút 📷 bên dưới nhé.",
-        time: now(),
-      }]);
+      setMessages((m) => [
+        ...m,
+        {
+          id: Date.now() + 1,
+          role: "ai",
+          text: "Cảm ơn bạn! Để định giá chính xác hơn, vui lòng gửi ảnh sản phẩm bằng nút 📷 bên dưới nhé.",
+          time: now(),
+        },
+      ]);
     }, 1000);
     inputRef.current?.focus();
   }
@@ -123,7 +137,7 @@ export default function AIChatWidget() {
       text: "📷 Đã gửi ảnh sản phẩm",
       time: now(),
     };
-    setMessages(m => [...m, userMsg]);
+    setMessages((m) => [...m, userMsg]);
     e.target.value = "";
 
     // Trigger analysis
@@ -137,19 +151,22 @@ export default function AIChatWidget() {
         time: now(),
         hasAction: true,
       };
-      setMessages(m => [...m, aiMsg]);
+      setMessages((m) => [...m, aiMsg]);
     }, 3000);
   }
 
   function handleConfirm() {
     setShowPopup(false);
     setSuccessToast(true);
-    setMessages(m => [...m, {
-      id: Date.now(),
-      role: "ai",
-      text: "🎉 Tuyệt vời! Sản phẩm **Cam sành** của bạn đã được đăng lên chợ thành công!\nMã đơn: #FR-2024-8847\nChúc bạn bán hàng thuận lợi! 🌿",
-      time: now(),
-    }]);
+    setMessages((m) => [
+      ...m,
+      {
+        id: Date.now(),
+        role: "ai",
+        text: " Tuyệt vời! Sản phẩm **Cam sành** của bạn đã được đăng lên chợ thành công!\nMã đơn: #FR-2024-8847\nChúc bạn bán hàng thuận lợi! ",
+        time: now(),
+      },
+    ]);
     setTimeout(() => setSuccessToast(false), 4000);
   }
 
@@ -157,9 +174,12 @@ export default function AIChatWidget() {
     <>
       {/* ── Floating button ── */}
       {!open && (
-        <button className="ai-fab" onClick={() => setOpen(true)} aria-label="Mở chat AI">
+        <button
+          className="ai-fab"
+          onClick={() => setOpen(true)}
+          aria-label="Mở chat AI"
+        >
           <span className="ai-fab__icon">🤖</span>
-          <span className="ai-fab__label">AI Định Giá</span>
           <span className="ai-fab__ping" />
         </button>
       )}
@@ -177,26 +197,39 @@ export default function AIChatWidget() {
             <span className="ai-chat__status">● Đang hoạt động</span>
           </div>
           <div className="ai-chat__header-actions">
-            <button className="ai-chat__icon-btn" title="Gọi điện">📞</button>
-            <button className="ai-chat__close-btn" onClick={() => setOpen(false)}>✕</button>
+            <button className="ai-chat__icon-btn" title="Gọi điện">
+              📞
+            </button>
+            <button
+              className="ai-chat__close-btn"
+              onClick={() => setOpen(false)}
+            >
+              ✕
+            </button>
           </div>
         </div>
 
         {/* Messages */}
         <div className="ai-chat__messages">
-          {messages.map(msg => (
-            <div key={msg.id} className={`ai-bubble-row ai-bubble-row--${msg.role}`}>
-              {msg.role === "ai" && (
-                <div className="ai-bubble-avatar">🤖</div>
-              )}
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`ai-bubble-row ai-bubble-row--${msg.role}`}
+            >
+              {msg.role === "ai" && <div className="ai-bubble-avatar">🤖</div>}
               <div className={`ai-bubble ai-bubble--${msg.role}`}>
                 {msg.image && (
-                  <img src={msg.image} alt="Ảnh sản phẩm" className="ai-bubble__image" />
+                  <img
+                    src={msg.image}
+                    alt="Ảnh sản phẩm"
+                    className="ai-bubble__image"
+                  />
                 )}
                 <p className="ai-bubble__text">
                   {msg.text.split("\n").map((line, i) => (
                     <span key={i}>
-                      {line.replace(/\*\*(.*?)\*\*/g, "$1")}<br />
+                      {line.replace(/\*\*(.*?)\*\*/g, "$1")}
+                      <br />
                     </span>
                   ))}
                 </p>
@@ -205,7 +238,7 @@ export default function AIChatWidget() {
                     className="ai-bubble__action-btn"
                     onClick={() => setShowPopup(true)}
                   >
-                    📋 Xem chi tiết & Đăng bán
+                    Xem chi tiết & Đăng bán
                   </button>
                 )}
                 <span className="ai-bubble__time">{msg.time}</span>
@@ -220,9 +253,13 @@ export default function AIChatWidget() {
               <div className="ai-bubble ai-bubble--ai ai-bubble--analyzing">
                 <div className="ai-analyzing">
                   <span className="ai-analyzing__icon">🔍</span>
-                  <span className="ai-analyzing__text">Đang phân tích hình ảnh...</span>
+                  <span className="ai-analyzing__text">
+                    Đang phân tích hình ảnh...
+                  </span>
                   <div className="ai-analyzing__dots">
-                    <span /><span /><span />
+                    <span />
+                    <span />
+                    <span />
                   </div>
                 </div>
                 <div className="ai-analyzing__bar">
@@ -244,9 +281,18 @@ export default function AIChatWidget() {
               onClick={() => fileRef.current?.click()}
               title="Đính kèm hình ảnh sản phẩm"
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
               </svg>
               <span>Đính kèm ảnh</span>
             </button>
@@ -266,7 +312,7 @@ export default function AIChatWidget() {
               type="text"
               placeholder="Nhắn tin cho AI trợ lý..."
               value={input}
-              onChange={e => setInput(e.target.value)}
+              onChange={(e) => setInput(e.target.value)}
             />
             <button
               className="ai-chat__send-btn"
@@ -274,8 +320,13 @@ export default function AIChatWidget() {
               disabled={!input.trim()}
               aria-label="Gửi"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>
             </button>
           </form>
@@ -292,9 +343,7 @@ export default function AIChatWidget() {
 
       {/* ── Success toast ── */}
       {successToast && (
-        <div className="ai-success-toast">
-          🎉 Đã đăng lên chợ thành công!
-        </div>
+        <div className="ai-success-toast">Đã đăng lên chợ thành công!</div>
       )}
     </>
   );

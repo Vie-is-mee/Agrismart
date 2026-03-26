@@ -54,12 +54,12 @@
   bottom: 28px;
   right: 28px;
   z-index: 8000;
-  width: 33vw;
-  min-width: 340px;
-  max-width: 480px;
-  height: 33vh;
-  min-height: 500px;
-  max-height: 660px;
+  width: 48vw;
+  min-width: 480px;
+  max-width: 700px;
+  height: 78vh;
+  min-height: 680px;
+  max-height: 920px;
   background: var(--white);
   border-radius: 20px;
   box-shadow: 0 16px 56px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(45,106,79,0.12);
@@ -82,22 +82,22 @@
 /* Header */
 .ai-chat__header {
   background: linear-gradient(135deg, var(--green-dark), var(--green-main));
-  padding: 14px 16px;
+  padding: 18px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
 }
 
 .ai-chat__avatar {
   position: relative;
-  width: 42px; height: 42px;
+  width: 50px; height: 50px;
   background: rgba(255,255,255,0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
@@ -120,7 +120,7 @@
 .ai-chat__name {
   color: var(--white);
   font-weight: 800;
-  font-size: 0.92rem;
+  font-size: 1.02rem;
   font-family: var(--font-body);
 }
 
@@ -235,8 +235,8 @@
 
 .ai-bubble__text {
   font-family: var(--font-body);
-  font-size: 0.88rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.55;
   color: inherit;
   word-break: break-word;
 }
@@ -652,7 +652,7 @@
     width: 100%;
     min-width: unset;
     max-width: 100%;
-    max-height: 85vh;
+    max-height: 90vh;
     border-radius: 20px 20px 0 0;
     transform-origin: bottom center;
   }

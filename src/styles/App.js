@@ -37,24 +37,37 @@ export default function App() {
           />
           <AIChatWidget />
           <Routes>
-            <Route path="/"              element={<Home />}          />
-            <Route path="/products"      element={<Products />}      />
-            <Route path="/product/:id"   element={<ProductDetail />} />
-            <Route path="/checkout"      element={<Checkout />}      />
-            <Route path="/about"         element={<About />}         />
-            <Route path="/shop/:shopId"  element={<ShopPage />}      />
-            <Route path="/my-shop"       element={<ShopDashboard />} />
-            <Route path="*"              element={
-              <div style={{ textAlign: "center", padding: "100px 20px" }}>
-                <h2 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--green-dark)" }}>
-                  🌿 Page Not Found
-                </h2>
-                <p style={{ color: "var(--text-mid)", margin: "12px 0 24px" }}>
-                  This page doesn't exist yet.
-                </p>
-                <a href="/" className="btn btn-primary">Go Home</a>
-              </div>
-            } />
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/shop/:shopId" element={<ShopPage />} />
+            <Route path="/my-shop" element={<ShopDashboard />} />
+            <Route
+              path="*"
+              element={
+                <div style={{ textAlign: "center", padding: "100px 20px" }}>
+                  <h2
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "2rem",
+                      color: "var(--green-dark)",
+                    }}
+                  >
+                    Page Not Found
+                  </h2>
+                  <p
+                    style={{ color: "var(--text-mid)", margin: "12px 0 24px" }}
+                  >
+                    This page doesn't exist yet.
+                  </p>
+                  <a href="/" className="btn btn-primary">
+                    Go Home
+                  </a>
+                </div>
+              }
+            />
           </Routes>
           <Footer />
         </ToastProvider>

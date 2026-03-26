@@ -30,7 +30,7 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     if (!product.inStock) return;
     dispatch({ type: "ADD", product, qty: product.minOrder || 1 });
-    addToast(`Đã thêm ${product.name} vào giỏ hàng!`, "🛒");
+    addToast(`Đã thêm ${product.name} vào giỏ hàng!`);
   }
 
   return (
@@ -43,7 +43,9 @@ export default function ProductCard({ product }) {
           loading="lazy"
         />
         {product.badge && (
-          <span className={`product-card__badge badge badge-${product.badgeType}`}>
+          <span
+            className={`product-card__badge badge badge-${product.badgeType}`}
+          >
             {product.badge}
           </span>
         )}
@@ -57,16 +59,23 @@ export default function ProductCard({ product }) {
         {shop && (
           <span
             className="product-card__shop"
-            onClick={e => { e.preventDefault(); window.location.href = `/shop/${shop.id}`; }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = `/shop/${shop.id}`;
+            }}
             title={`Xem gian hàng: ${shop.name}`}
           >
             🏪 {shop.name}
-            {shop.verified && <span className="product-card__shop-check">✓</span>}
+            {shop.verified && (
+              <span className="product-card__shop-check">✓</span>
+            )}
           </span>
         )}
         <div className="product-card__rating">
           <Stars rating={product.rating} />
-          <span className="product-card__reviews">({product.reviews} đánh giá)</span>
+          <span className="product-card__reviews">
+            ({product.reviews} đánh giá)
+          </span>
         </div>
         <div className="product-card__footer">
           <div>
