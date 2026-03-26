@@ -345,9 +345,9 @@ export default function ShopDashboard() {
     .reduce((sum, p) => sum + p.price * Math.floor(Math.random() * 40 + 10), 0);
 
   const tabs = [
-    { id: "overview", label: "📊 Tổng Quan" },
-    { id: "products", label: "🛒 Sản Phẩm" },
-    { id: "profile", label: "🏪 Hồ Sơ Shop" },
+    { id: "overview", label: " Tổng Quan" },
+    { id: "products", label: " Sản Phẩm" },
+    { id: "profile", label: " Hồ Sơ Shop" },
   ];
 
   function handleSaveProduct(productId, changes) {
@@ -401,7 +401,7 @@ export default function ShopDashboard() {
           <div className="dash-header__left">
             <img src={shop.avatar} alt={shop.owner} className="dash-avatar" />
             <div>
-              <h1 className="dash-title">Xin chào, {shop.owner}! 👋</h1>
+              <h1 className="dash-title">Xin chào, {shop.owner}! </h1>
               <p className="dash-subtitle">
                 Quản lý gian hàng <strong>{shop.name}</strong>
                 {shop.verified && (
@@ -625,164 +625,197 @@ export default function ShopDashboard() {
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="dash-content">
-            <div className="dash-section">
-              <div className="dash-section__header">
-                <h2 className="dash-section__title">Hồ sơ gian hàng</h2>
+            {/* Hero Banner */}
+            <div
+              className="profile-hero"
+              style={{
+                backgroundImage:
+                  "url(https://vitropi.com/wp-content/uploads/2021/08/gioi-thieu_03.jpg)",
+              }}
+            >
+              <div className="profile-hero-overlay"></div>
+              <div className="profile-hero-content">
+                <h1 className="profile-hero-title">{shop.name}</h1>
+                <p className="profile-hero-subtitle">
+                  Nông sản tươi sạch từ đất Việt
+                </p>
+              </div>
+            </div>
+
+            {/* Shop Header with Edit */}
+            <div className="profile-header-action">
+              <button
+                className={
+                  "btn " + (editingShop ? "btn-outline-danger" : "btn-primary")
+                }
+                onClick={() => setEditingShop((e) => !e)}
+              >
+                {editingShop ? "✕ Huỷ" : "✏️ Chỉnh sửa hồ sơ"}
+              </button>
+            </div>
+
+            {/* Shop Info Section */}
+            <div className="profile-info-grid">
+              <div className="profile-info-card">
+                <div className="profile-info-avatar">
+                  <img src={shop.avatar} alt={shop.owner} />
+                </div>
+                <h3 className="profile-info-name">{shop.owner}</h3>
+                <p className="profile-info-role">Chủ cửa hàng</p>
+                {shop.verified && (
+                  <span className="profile-badge-verified">✓ Xác minh</span>
+                )}
+              </div>
+
+              <div className="profile-stats-card">
+                <div className="stat-item">
+                  <div className="stat-number">{localProducts.length}</div>
+                  <div className="stat-label">Sản phẩm</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">{shop.rating}</div>
+                  <div className="stat-label">Đánh giá</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">{shop.totalSales}</div>
+                  <div className="stat-label">Đơn hàng</div>
+                </div>
+              </div>
+            </div>
+
+            {/* About Section */}
+            <div className="profile-section blog-section">
+              <div className="profile-section-header">
+                <h2 className="profile-section-title">
+                  Câu chuyện của chúng tôi
+                </h2>
+              </div>
+
+              <div className="blog-about-grid">
+                <div className="blog-about-text">
+                  {editingShop ? (
+                    <textarea
+                      className="dash-textarea"
+                      value={shopDraft.description}
+                      onChange={(e) =>
+                        setShopDraft((d) => ({
+                          ...d,
+                          description: e.target.value,
+                        }))
+                      }
+                      rows={5}
+                    />
+                  ) : (
+                    <p className="blog-about-content">{shop.description}</p>
+                  )}
+                </div>
+                <div className="blog-about-image">
+                  <img
+                    src="https://vitropi.com/wp-content/uploads/2021/08/gioi-thieu_04.jpg"
+                    alt="Nông sản tươi"
+                    className="bio-image"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Farm Gallery */}
+            <div className="profile-section gallery-section">
+              <h2 className="profile-section-title"> Hình ảnh vườn cây</h2>
+              <div className="gallery-grid">
+                <img
+                  src="https://vitropi.com/wp-content/uploads/2021/08/gioi-thieu_02.jpg"
+                  alt="Farm"
+                  className="gallery-item"
+                />
+              </div>
+            </div>
+
+            {/* Shop Info Form */}
+            <div className="profile-section form-section">
+              <h2 className="profile-section-title">ℹ️ Thông tin chi tiết</h2>
+              <div className="profile-form-grid">
+                <div className="profile-form-group">
+                  <label>📦 Tên gian hàng</label>
+                  {editingShop ? (
+                    <input
+                      className="dash-input"
+                      value={shopDraft.name}
+                      onChange={(e) =>
+                        setShopDraft((d) => ({ ...d, name: e.target.value }))
+                      }
+                    />
+                  ) : (
+                    <p className="form-value">{shop.name}</p>
+                  )}
+                </div>
+                <div className="profile-form-group">
+                  <label>📍 Địa chỉ</label>
+                  {editingShop ? (
+                    <input
+                      className="dash-input"
+                      value={shopDraft.location}
+                      onChange={(e) =>
+                        setShopDraft((d) => ({
+                          ...d,
+                          location: e.target.value,
+                        }))
+                      }
+                    />
+                  ) : (
+                    <p className="form-value">{shop.location}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Certifications */}
+            <div className="profile-section cert-section">
+              <h2 className="profile-section-title">
+                🏅 Chứng nhận & Giải thưởng
+              </h2>
+              <div className="profile-certs-list">
+                {shop.certifications.length > 0 ? (
+                  shop.certifications.map((c) => (
+                    <span key={c} className="cert-badge">
+                      {c}
+                    </span>
+                  ))
+                ) : (
+                  <p className="no-cert-msg">
+                    Chưa có chứng nhận. Liên hệ để đăng ký xác minh.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Save Button */}
+            {editingShop && (
+              <div className="profile-save-actions">
                 <button
-                  className={
-                    "btn " +
-                    (editingShop ? "btn-outline-danger" : "btn-primary")
-                  }
-                  onClick={() => setEditingShop((e) => !e)}
+                  className="btn btn-primary"
+                  onClick={() => {
+                    alert("✅ Hồ sơ đã được lưu! (Demo mode)");
+                    setEditingShop(false);
+                  }}
                 >
-                  {editingShop ? "✕ Huỷ" : "✏️ Chỉnh sửa"}
+                  💾 Lưu thay đổi
                 </button>
               </div>
+            )}
 
-              <div className="dash-profile-form">
-                <div className="dash-profile-cover">
-                  <img
-                    src={shop.coverImage}
-                    alt="cover"
-                    className="dash-cover-preview"
-                  />
-                  {editingShop && (
-                    <button
-                      className="dash-cover-change-btn"
-                      disabled
-                      title="Sắp ra mắt"
-                    >
-                      📷 Đổi ảnh bìa
-                    </button>
-                  )}
-                </div>
-
-                <div className="dash-profile-row">
-                  <img
-                    src={shop.avatar}
-                    alt={shop.owner}
-                    className="dash-profile-avatar"
-                  />
-                  {editingShop && (
-                    <button
-                      className="dash-avatar-change-btn"
-                      disabled
-                      title="Sắp ra mắt"
-                    >
-                      📷
-                    </button>
-                  )}
-                </div>
-
-                <div className="dash-form-grid">
-                  <div className="dash-form-group">
-                    <label>Tên gian hàng</label>
-                    {editingShop ? (
-                      <input
-                        className="dash-input"
-                        value={shopDraft.name}
-                        onChange={(e) =>
-                          setShopDraft((d) => ({ ...d, name: e.target.value }))
-                        }
-                      />
-                    ) : (
-                      <p className="dash-form-value">{shop.name}</p>
-                    )}
-                  </div>
-                  <div className="dash-form-group">
-                    <label>Địa chỉ</label>
-                    {editingShop ? (
-                      <input
-                        className="dash-input"
-                        value={shopDraft.location}
-                        onChange={(e) =>
-                          setShopDraft((d) => ({
-                            ...d,
-                            location: e.target.value,
-                          }))
-                        }
-                      />
-                    ) : (
-                      <p className="dash-form-value">📍 {shop.location}</p>
-                    )}
-                  </div>
-                  <div className="dash-form-group full-width">
-                    <label>Mô tả gian hàng</label>
-                    {editingShop ? (
-                      <textarea
-                        className="dash-textarea"
-                        value={shopDraft.description}
-                        onChange={(e) =>
-                          setShopDraft((d) => ({
-                            ...d,
-                            description: e.target.value,
-                          }))
-                        }
-                        rows={5}
-                      />
-                    ) : (
-                      <p className="dash-form-value">{shop.description}</p>
-                    )}
-                  </div>
-                </div>
-
-                {editingShop && (
-                  <div className="dash-form-actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        alert(
-                          "✅ Thông tin đã được lưu! (Demo mode — không lưu vào backend)",
-                        );
-                        setEditingShop(false);
-                      }}
-                    >
-                      💾 Lưu thay đổi
-                    </button>
-                  </div>
-                )}
-
-                {/* Certifications */}
-                <div className="dash-certs-section">
-                  <h3 className="dash-certs-title">🏅 Chứng nhận</h3>
-                  <div className="dash-certs-list">
-                    {shop.certifications.length > 0 ? (
-                      shop.certifications.map((c) => (
-                        <span key={c} className="dash-cert-tag">
-                          {c}
-                        </span>
-                      ))
-                    ) : (
-                      <p className="dash-no-cert">
-                        Chưa có chứng nhận. Liên hệ chúng tôi để đăng ký xác
-                        minh.
-                      </p>
-                    )}
-                    <button
-                      className="dash-cert-add-btn"
-                      disabled
-                      title="Sắp ra mắt"
-                    >
-                      + Thêm chứng nhận
-                    </button>
-                  </div>
-                </div>
-
-                {/* Danger zone */}
-                <div className="dash-danger-zone">
-                  <h3 className="dash-danger-zone__title">⚠️ Vùng nguy hiểm</h3>
-                  <p className="dash-danger-zone__desc">
-                    Xóa gian hàng sẽ xóa vĩnh viễn tất cả sản phẩm, đơn hàng và
-                    dữ liệu liên quan. Hành động này không thể hoàn tác.
-                  </p>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => setShowDeleteModal(true)}
-                  >
-                    🗑️ Xóa Gian Hàng Vĩnh Viễn
-                  </button>
-                </div>
-              </div>
+            {/* Danger Zone */}
+            <div className="profile-section danger-section">
+              <p className="danger-desc">
+                Xóa gian hàng sẽ xóa vĩnh viễn tất cả sản phẩm, đơn hàng và dữ
+                liệu. Không thể hoàn tác.
+              </p>
+              <button
+                className="btn btn-danger"
+                onClick={() => setShowDeleteModal(true)}
+              >
+                Xóa Gian Hàng Vĩnh Viễn
+              </button>
             </div>
           </div>
         )}

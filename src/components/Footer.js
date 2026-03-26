@@ -8,7 +8,10 @@ export default function Footer() {
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
-            <div className="footer__logo"><img src="/icons/logo-nong-san-nha-que.png" alt="RễTươi" /> RễTươi</div>
+            <div className="footer__logo">
+              <img src="/icons/logo-nong-san-nha-que.png" alt="AgriSmart" />{" "}
+              AgriSmart
+            </div>
             <p className="footer__tagline">
               Kết nối nông dân với bàn ăn của bạn — tươi ngon, trung thực và gắn
               kết cộng đồng.
@@ -59,8 +62,8 @@ export default function Footer() {
 
           <div className="footer__col footer__contact">
             <h4>Liên Hệ</h4>
-            <p>📞 1800-RỄ-TƯƠI</p>
-            <p>📧 xinchao@retươi.vn</p>
+            <p>📞 1800-6969</p>
+            <p>📧 xinchao@agrismart.vn</p>
             <p>⏰ Thứ 2–7: 7:00 – 21:00</p>
             <div className="footer__trust-badges">
               <span> Đảm Bảo Chất Lượng</span>

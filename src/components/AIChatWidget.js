@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useCart } from "../context/CartContext";
 import "./AIChatWidget.css";
 
 /* ── Static demo messages ── */
@@ -6,7 +7,7 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     role: "ai",
-    text: "Xin chào! Tôi là trợ lý AI của Rễ Tươi 🌿\nBạn muốn đăng bán nông sản? Hãy gửi ảnh sản phẩm để tôi phân tích và gợi ý giá nhé!",
+    text: "Xin chào! Tôi là trợ lý AI của AgriSmart\nBạn muốn đăng bán nông sản? Hãy gửi ảnh sản phẩm để tôi phân tích và gợi ý giá nhé!",
     time: "08:30",
   },
 ];
@@ -20,7 +21,7 @@ function ListingPopup({ onClose, onConfirm }) {
     >
       <div className="ai-popup">
         <div className="ai-popup__header">
-          <div className="ai-popup__icon">✅</div>
+          <div className="ai-popup__icon"></div>
           <h3 className="ai-popup__title">Phân Tích Hoàn Tất!</h3>
           <p className="ai-popup__subtitle">
             AI đã nhận diện sản phẩm và gợi ý giá thị trường
@@ -30,34 +31,36 @@ function ListingPopup({ onClose, onConfirm }) {
         <div className="ai-popup__body">
           <div className="ai-popup__field">
             <div className="ai-popup__field-label">
-              <span className="ai-popup__field-icon">🍊</span>
+              <span className="ai-popup__field-icon"></span>
               Tên sản phẩm
             </div>
-            <div className="ai-popup__field-value">Cam sành</div>
+            <div className="ai-popup__field-value">
+              Khoai lang tím sấy hữu cơ
+            </div>
           </div>
 
           <div className="ai-popup__field">
             <div className="ai-popup__field-label">
-              <span className="ai-popup__field-icon">⚖️</span>
-              Số lượng
+              <span className="ai-popup__field-icon"></span>
+              Đơn vị
             </div>
-            <div className="ai-popup__field-value">500 kg</div>
+            <div className="ai-popup__field-value">Gói 300g</div>
           </div>
 
           <div className="ai-popup__field ai-popup__field--highlight">
             <div className="ai-popup__field-label">
-              <span className="ai-popup__field-icon">💰</span>
+              <span className="ai-popup__field-icon"></span>
               Mức giá AI gợi ý
             </div>
             <div className="ai-popup__field-value ai-popup__price">
-              15.000₫<span className="ai-popup__unit">/kg</span>
+              50.000₫<span className="ai-popup__unit">/gói</span>
             </div>
           </div>
 
           <div className="ai-popup__insight">
-            <span className="ai-popup__insight-icon">📊</span>
+            <span className="ai-popup__insight-icon"></span>
             <span>
-              Giá thị trường hiện tại: <strong>13.000 – 17.000₫/kg</strong> —
+              Giá thị trường hiện tại: <strong>45.000 – 55.000₫/kg</strong> —
               Mức gợi ý đang ở phân khúc cạnh tranh tốt.
             </span>
           </div>
@@ -65,10 +68,10 @@ function ListingPopup({ onClose, onConfirm }) {
 
         <div className="ai-popup__actions">
           <button className="ai-popup__confirm" onClick={onConfirm}>
-            🛒 Xác nhận đăng lên chợ
+            Xác nhận đăng lên chợ
           </button>
           <button className="ai-popup__edit" onClick={onClose}>
-            ✏️ Chỉnh sửa thông tin
+            Chỉnh sửa thông tin
           </button>
         </div>
       </div>
@@ -78,6 +81,7 @@ function ListingPopup({ onClose, onConfirm }) {
 
 /* ── Main widget ── */
 export default function AIChatWidget() {
+  const { isOpen: isCartOpen } = useCart();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
@@ -115,7 +119,7 @@ export default function AIChatWidget() {
         {
           id: Date.now() + 1,
           role: "ai",
-          text: "Cảm ơn bạn! Để định giá chính xác hơn, vui lòng gửi ảnh sản phẩm bằng nút 📷 bên dưới nhé.",
+          text: "Cảm ơn bạn! Để định giá chính xác hơn, vui lòng gửi ảnh sản phẩm bằng nút bên dưới nhé.",
           time: now(),
         },
       ]);
@@ -134,7 +138,7 @@ export default function AIChatWidget() {
       id: Date.now(),
       role: "user",
       image: url,
-      text: "📷 Đã gửi ảnh sản phẩm",
+      text: "Đã gửi ảnh sản phẩm",
       time: now(),
     };
     setMessages((m) => [...m, userMsg]);
@@ -147,7 +151,7 @@ export default function AIChatWidget() {
       const aiMsg = {
         id: Date.now() + 2,
         role: "ai",
-        text: "✅ Tôi đã phân tích xong ảnh của bạn!\n🍊 Nhận diện: **Cam sành**\n⚖️ Ước tính: ~500 kg\n💰 Giá gợi ý: 15.000₫/kg\n\nBấm bên dưới để xem chi tiết và đăng bán!",
+        text: "Tôi đã phân tích xong ảnh của bạn!\nNhận diện: **Khoai lang tím**\n Đơn vị: Gói 300g \nGiá gợi ý: 50.000₫/kg\n\nBấm bên dưới để xem chi tiết và đăng bán!",
         time: now(),
         hasAction: true,
       };
@@ -163,7 +167,7 @@ export default function AIChatWidget() {
       {
         id: Date.now(),
         role: "ai",
-        text: " Tuyệt vời! Sản phẩm **Cam sành** của bạn đã được đăng lên chợ thành công!\nMã đơn: #FR-2024-8847\nChúc bạn bán hàng thuận lợi! ",
+        text: " Tuyệt vời! Sản phẩm **Khoai lang tím** của bạn đã được đăng lên chợ thành công!\nMã đơn: #FR-2024-8847\nChúc bạn bán hàng thuận lợi! ",
         time: now(),
       },
     ]);
@@ -173,13 +177,24 @@ export default function AIChatWidget() {
   return (
     <>
       {/* ── Floating button ── */}
-      {!open && (
+      {!open && !isCartOpen && (
         <button
           className="ai-fab"
           onClick={() => setOpen(true)}
           aria-label="Mở chat AI"
         >
-          <span className="ai-fab__icon">🤖</span>
+          <span className="ai-fab__icon">
+            <img
+              src="/icons/logo-nong-san-nha-que.png"
+              alt="AgriSmart AI"
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+          </span>
           <span className="ai-fab__ping" />
         </button>
       )}
@@ -189,7 +204,16 @@ export default function AIChatWidget() {
         {/* Header */}
         <div className="ai-chat__header">
           <div className="ai-chat__avatar">
-            <span>🤖</span>
+            <img
+              src="/icons/logo-nong-san-nha-que.png"
+              alt="AgriSmart AI"
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
             <span className="ai-chat__online-dot" />
           </div>
           <div className="ai-chat__header-info">
@@ -216,7 +240,20 @@ export default function AIChatWidget() {
               key={msg.id}
               className={`ai-bubble-row ai-bubble-row--${msg.role}`}
             >
-              {msg.role === "ai" && <div className="ai-bubble-avatar">🤖</div>}
+              {msg.role === "ai" && (
+                <div className="ai-bubble-avatar">
+                  <img
+                    src="/icons/logo-nong-san-nha-que.png"
+                    alt="AgriSmart AI"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+              )}
               <div className={`ai-bubble ai-bubble--${msg.role}`}>
                 {msg.image && (
                   <img
@@ -249,10 +286,21 @@ export default function AIChatWidget() {
           {/* Analyzing bubble */}
           {analyzing && (
             <div className="ai-bubble-row ai-bubble-row--ai">
-              <div className="ai-bubble-avatar">🤖</div>
+              <div className="ai-bubble-avatar">
+                <img
+                  src="/icons/logo-nong-san-nha-que.png"
+                  alt="AgriSmart AI"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
               <div className="ai-bubble ai-bubble--ai ai-bubble--analyzing">
                 <div className="ai-analyzing">
-                  <span className="ai-analyzing__icon">🔍</span>
+                  <span className="ai-analyzing__icon"></span>
                   <span className="ai-analyzing__text">
                     Đang phân tích hình ảnh...
                   </span>

@@ -54,12 +54,12 @@ export default function About() {
               Bén Rễ Từ Đất, Vươn Đến Bàn Ăn Của Bạn
             </h1>
             <p className="about-hero__body">
-              RễTươi ra đời năm 2020 khi người sáng lập ghé thăm một nông trại ở
-              đồng bằng sông Cửu Long và phát hiện người nông dân chỉ nhận được
-              15% so với giá người tiêu dùng ở thành phố phải trả. Chúng tôi xây
-              dựng nền tảng này để thay đổi điều đó — kết nối hàng trăm gia đình
-              nông dân trực tiếp với bữa ăn Việt Nam, không qua bất kỳ khâu
-              trung gian không cần thiết nào.
+              AgriSmart ra đời năm 2020 khi người sáng lập ghé thăm một nông
+              trại ở đồng bằng sông Cửu Long và phát hiện người nông dân chỉ
+              nhận được 15% so với giá người tiêu dùng ở thành phố phải trả.
+              Chúng tôi xây dựng nền tảng này để thay đổi điều đó — kết nối hàng
+              trăm gia đình nông dân trực tiếp với bữa ăn Việt Nam, không qua
+              bất kỳ khâu trung gian không cần thiết nào.
             </p>
             <Link to="/products" className="btn btn-primary">
               Mua Sắm Ngay →

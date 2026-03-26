@@ -169,7 +169,7 @@ export const products = [
     price: 28000,
     unit: "kg",
     image:
-      "https://images.unsplash.com/photo-1596097559945-0a6d30a6a0df?w=400&q=80",
+      "https://images.unsplash.com/photo-1579384264577-79580c9d3a36?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHVycGxlJTIwc3dlZXQlMjBwb3RhdG9lc3xlbnwwfHwwfHx8MA%3D%3D",
     badge: "Hữu Cơ",
     badgeType: "green",
     rating: 4.5,
@@ -240,7 +240,7 @@ export const products = [
     price: 95000,
     unit: "500g",
     image:
-      "https://images.unsplash.com/photo-1612201141937-4d30df137fa1?w=400&q=80",
+      "https://images.unsplash.com/photo-1563117063-ad38230557bc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     badge: "Siêu Thực Phẩm",
     badgeType: "green",
     rating: 4.6,
@@ -265,7 +265,7 @@ export const products = [
     price: 180000,
     unit: "250g",
     image:
-      "https://images.unsplash.com/photo-1514733670139-4d66c773f476?w=400&q=80",
+      "https://images.unsplash.com/photo-1652128288742-df890f000a56?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmxhY2slMjBwZXBwZXJ8ZW58MHx8MHx8fDA%3D",
     badge: "Chỉ Dẫn Địa Lý",
     badgeType: "green",
     rating: 4.9,
@@ -288,7 +288,7 @@ export const products = [
     price: 38000,
     unit: "200g",
     image:
-      "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80",
+      "https://media.istockphoto.com/id/126224019/photo/lemon-grass-as-spice-from-india.webp?a=1&b=1&s=612x612&w=0&k=20&c=BBfEJoUlLI8fyVR2zoqJyaPOtown2FXttc6tDGZa6TM=",
     badge: null,
     badgeType: null,
     rating: 4.4,
@@ -303,34 +303,9 @@ export const products = [
     minOrder: 1,
   },
 
-  // ── MẬT ONG ───────────────────────────────────────────
-  {
-    id: 12,
-    category: "honey",
-    shopId: "shop-5",
-    name: "Mật Ong Rừng Tây Nguyên",
-    origin: "Tỉnh Đắk Lắk",
-    price: 220000,
-    unit: "hũ 500ml",
-    image:
-      "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&q=80",
-    badge: "Nguyên Chất Không Lọc",
-    badgeType: "amber",
-    rating: 4.9,
-    reviews: 198,
-    description:
-      "Mật ong rừng nguyên chất thu từ tổ ong tự nhiên trong rừng Tây Nguyên. Màu sậm, hương phức hợp, giàu enzyme và phấn hoa.",
-    story:
-      "Các thợ lấy mật người dân tộc thiểu số đã khai thác mật từ những cánh rừng này qua nhiều thế hệ. Mỗi hũ chứa tinh chất của hàng trăm loài hoa dại chỉ có ở cao nguyên Đắk Lắk.",
-    tags: ["nguyên-chất", "không-lọc", "rừng-tự-nhiên", "chống-oxy-hóa"],
-    inStock: true,
-    stockQty: 31,
-    minOrder: 1,
-  },
-
   // ── ĐẶC SẢN KHÔ ───────────────────────────────────────────
   {
-    id: 13,
+    id: 12,
     category: "dried",
     shopId: "shop-1",
     name: "Nhãn Lồng Sấy Hưng Yên",
@@ -338,7 +313,7 @@ export const products = [
     price: 145000,
     unit: "500g",
     image:
-      "https://images.unsplash.com/photo-1601493700629-8bba3b9e6e8d?w=400&q=80",
+      "https://plus.unsplash.com/premium_photo-1676879545004-01038cde2520?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZHJ5JTIwbG9uZ2FufGVufDB8fDB8fHww",
     badge: "Truyền Thống",
     badgeType: "amber",
     rating: 4.7,
@@ -353,7 +328,7 @@ export const products = [
     minOrder: 1,
   },
   {
-    id: 14,
+    id: 13,
     category: "dried",
     shopId: "shop-2",
     name: "Nho Khô Ninh Thuận",
@@ -361,7 +336,7 @@ export const products = [
     price: 88000,
     unit: "300g",
     image:
-      "https://images.unsplash.com/photo-1596569637738-4c406f09c4af?w=400&q=80",
+      "https://plus.unsplash.com/premium_photo-1669205434519-a042ba09fbdd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZHJ5JTIwZ3JhcGV8ZW58MHx8MHx8fDA%3D",
     badge: "Mới",
     badgeType: "red",
     rating: 4.5,
