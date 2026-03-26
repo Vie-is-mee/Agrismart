@@ -15,6 +15,7 @@ import About from "./pages/About";
 import ShopPage from "./pages/ShopPage";
 import ShopDashboard from "./pages/ShopDashboard";
 import "./styles/global.css";
+import "./styles/responsive.css";
 
 export default function App() {
   const [loginOpen, setLoginOpen] = useState(false);

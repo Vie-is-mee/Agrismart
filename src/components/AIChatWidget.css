@@ -51,15 +51,13 @@
 /* ── Chat panel ── */
 .ai-chat {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom:     clamp(16px, 2vh, 28px);
+  right:      clamp(16px, 2vw, 28px);
   z-index: 8000;
-  width: 48vw;
-  min-width: 480px;
-  max-width: 700px;
-  height: 78vh;
-  min-height: 680px;
-  max-height: 920px;
+  width:      clamp(340px, 42vw, 680px);
+  max-width:  min(680px, calc(100vw - 48px));
+  height:     clamp(480px, 72vh, 880px);
+  max-height: min(880px, calc(100vh - 48px));
   background: var(--white);
   border-radius: 20px;
   box-shadow: 0 16px 56px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(45,106,79,0.12);
