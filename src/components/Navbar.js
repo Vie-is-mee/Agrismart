@@ -60,7 +60,7 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
               aria-label="Tìm kiếm"
               title="Tìm kiếm sản phẩm"
             >
-              🔍
+              <img src="/icons/SearchIcon.ico" alt="Tìm kiếm" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
             </button>
             <button
               className="navbar__icon-btn navbar__cart-btn"
@@ -68,7 +68,7 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
               aria-label="Mở giỏ hàng"
               title="Xem giỏ hàng"
             >
-              🛒
+              <img src="/icons/ShoppingCartIcon.ico" alt="Giỏ hàng" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
               {totalItems > 0 && (
                 <span className="navbar__cart-badge">{totalItems}</span>
               )}
@@ -148,7 +148,6 @@ export default function Navbar({ user, onLoginClick, onLogout }) {
           <li><Link to="/products?category=vegetables">🥦 Rau Củ Quả</Link></li>
           <li><Link to="/products?category=grains">🌾 Gạo & Ngũ Cốc</Link></li>
           <li><Link to="/products?category=herbs">🌿 Gia Vị & Thảo Mộc</Link></li>
-          <li><Link to="/products?category=honey">🍯 Mật Ong</Link></li>
           <li><Link to="/about">ℹ️ Về Chúng Tôi</Link></li>
           <li><Link to="/my-shop" className="mobile-shop-link">🏪 Gian Hàng Của Tôi</Link></li>
         </ul>

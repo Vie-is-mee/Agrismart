@@ -111,11 +111,11 @@ export default function Home() {
       {/* ── Danh Mục ──────────────────── */}
       <section className="section">
         <div className="container">
-          <h2 className="section-title">Mua Theo Danh Mục</h2>
-          <p className="section-subtitle">Tất cả mọi thứ từ nông trại, quy tụ về một nơi</p>
+          <h2 className="section-title" style={{ textAlign: "center" }}>Mua Theo Danh Mục</h2>
+          <p className="section-subtitle" style={{ textAlign: "center" }}>Tất cả mọi thứ từ nông trại, quy tụ về một nơi</p>
           <div className="categories-grid">
             <Link to="/products" className="category-card category-card--all">
-              <span className="category-card__emoji">🛒</span>
+              <img src="/icons/GianHangRauCuQua.ico" alt="Tất Cả Sản Phẩm" className="category-card__icon-img" />
               <span className="category-card__label">Tất Cả Sản Phẩm</span>
             </Link>
             {categories.map(cat => (
@@ -125,7 +125,10 @@ export default function Home() {
                 className="category-card"
                 style={{ "--cat-bg": cat.color }}
               >
-                <span className="category-card__emoji">{cat.emoji}</span>
+                {cat.icon
+                  ? <img src={cat.icon} alt={cat.label} className="category-card__icon-img" />
+                  : <span className="category-card__emoji">{cat.emoji}</span>
+                }
                 <span className="category-card__label">{cat.label}</span>
               </Link>
             ))}
