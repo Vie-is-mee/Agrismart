@@ -118,12 +118,9 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
               <img src="/icons/logo-nong-san-nha-que.png" alt="logo" />
             </span>
             <span className="lm-card__brand-text">
-              Rễ<strong>Tươi</strong>
+              Agri<strong>Smart</strong>
             </span>
           </div>
-          <p className="lm-card__tagline">
-            Chợ nông sản sạch, trực tiếp từ nông dân
-          </p>
         </div>
 
         <div className="lm-tabs">
@@ -458,7 +455,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
 
               <div className="lm-tax-card lm-tax-card--platform">
                 <div className="lm-tax-card__title">
-                  Phí Duy Trì Cửa Hàng trên RễTươi
+                  Phí Duy Trì Cửa Hàng trên AgriSmart
                 </div>
                 <div className="lm-fee-table">
                   <div className="lm-fee-row lm-fee-row--header">
