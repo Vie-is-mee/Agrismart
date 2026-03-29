@@ -175,7 +175,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
               disabled={!role}
               onClick={() => setStep(STEPS.FORM)}
             >
-              Tiếp Tục →
+              Tiếp Tục
             </button>
           </div>
         )}
