@@ -13,12 +13,12 @@
 
 .ai-chat {
   /* Thay min/max cứng bằng clamp linh hoạt */
-  width: clamp(340px, 42vw, 680px);
-  height: clamp(480px, 72vh, 880px);
+  width: clamp(340px, 50vw, 760px);
+  height: clamp(480px, 80vh, 950px);
   min-width: unset;
   min-height: unset;
-  max-width: min(680px, calc(100vw - 48px));
-  max-height: min(880px, calc(100vh - 48px));
+  max-width: min(760px, calc(100vw - 48px));
+  max-height: min(950px, calc(100vh - 48px));
   bottom: clamp(16px, 2vh, 28px);
   right: clamp(16px, 2vw, 28px);
 }
@@ -270,10 +270,10 @@
 
   /* Chatbot */
   .ai-chat {
-    width: clamp(320px, 55vw, 560px);
-    height: clamp(440px, 68vh, 760px);
-    max-width: min(560px, calc(100vw - 32px));
-    max-height: min(760px, calc(100vh - 32px));
+    width: clamp(320px, 55vw, 620px);
+    height: clamp(440px, 75vh, 840px);
+    max-width: min(620px, calc(100vw - 32px));
+    max-height: min(840px, calc(100vh - 32px));
     bottom: 20px;
     right: 20px;
   }

@@ -49,10 +49,10 @@ export const products = [
     shopId: "shop-1",
     name: "Cam Cao Phong",
     origin: "Tỉnh Hòa Bình",
-    price: 85000,
+    price: 22000,
     unit: "kg",
     image:
-      "https://images.unsplash.com/photo-1547514701-42782101795e?w=400&q=80",
+      "https://cdn.tgdd.vn/2024/10/CookRecipe/CookTipsNote/cam-cao-phong-la-cam-gi-nhung-mon-ngon-tu-cam-cao-phong-tipsnote-800x500.jpg",
     badge: "Bán Chạy",
     badgeType: "green",
     rating: 4.8,
@@ -63,7 +63,7 @@ export const products = [
       "Cam Cao Phong phát triển trong tiểu khí hậu đặc biệt của Hòa Bình, nơi sự kết hợp giữa không khí núi mát mẻ và đất giàu khoáng chất tạo ra loại quả có tỷ lệ đường-axit hoàn hảo mà không nơi nào sánh được.",
     tags: ["hữu-cơ", "theo-mùa", "vitamin-c"],
     inStock: true,
-    stockQty: 48,
+    stockQty: 100,
     minOrder: 1,
   },
   {
