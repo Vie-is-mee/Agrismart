@@ -1,6 +1,21 @@
-node_modules/
+# Python
+__pycache__/
+*.pyc
 .env
-dist/
-build/
-*.log
-*.zip
+venv/
+.venv/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Database (tự sinh)
+db/agrieco.db
+
+# Uploads tạm
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Build
+frontend/build/
+.DS_Store
