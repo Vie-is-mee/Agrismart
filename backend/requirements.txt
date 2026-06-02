@@ -6,6 +6,7 @@ python-dotenv==1.0.1
 # Google Gemini SDK (mới, thay thế google-generativeai đã EOL 30/11/2025)
 google-genai==1.5.0
 pillow==11.1.0
+gunicorn==21.2.0
 
 # Tùy chọn: nhận dạng giọng nói (ghi âm). Bỏ comment nếu cần.
 # SpeechRecognition==3.14.1
