@@ -30,7 +30,11 @@ from chatbot import AgriChatbot, AI_ENABLED
 init_db()
 
 app = Flask(__name__)
-CORS(app)  # cho phép frontend (cổng 3000) gọi sang
+# Thay dòng CORS(app) hiện tại bằng:
+CORS(app, origins=[
+    "http://localhost:3000",
+    "https://agrismart-azure.vercel.app/"  # URL Vercel của bạn
+])
 
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
