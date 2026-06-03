@@ -104,9 +104,7 @@ export default function AIChatWidget() {
         {
           id: Date.now() + 2,
           role: "ai",
-          text:
-            "Dạ cháu không kết nối được tới máy chủ. Cô/chú kiểm tra backend đã chạy " +
-            "(http://localhost:5000) chưa giúp cháu nhé ạ.\n(" + err.message + ")",
+          text: "Dạ cháu xin lỗi, hiện hệ thống đang gặp sự cố kỹ thuật. Cô/chú vui lòng thử lại sau ít phút nhé ạ! 🙏",
           time: now(),
         },
       ]);
