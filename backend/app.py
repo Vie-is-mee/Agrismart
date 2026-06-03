@@ -30,7 +30,7 @@ init_db()
 app = Flask(__name__)
 # Thay dòng CORS(app) hiện tại bằng:
 CORS(app, origins=[
-    "http://localhost:5000",
+    "http://localhost:3000",
     "https://agrismart-azure.vercel.app/"  # URL Vercel của bạn
 ])
 
