@@ -18,19 +18,8 @@ async function handle(res) {
 }
 
 // ── Chat ──────────────────────────────────────────────────
-// payload: { text, sessionId, sellerId, imageFile?, audioFile? }
-export async function sendChat({ text, sessionId, sellerId = 1, imageFile, audioFile }) {
-  // Có file → multipart; không thì JSON.
-  if (imageFile || audioFile) {
-    const fd = new FormData();
-    fd.append("text", text || "");
-    fd.append("session_id", sessionId || "default");
-    fd.append("seller_id", String(sellerId));
-    if (imageFile) fd.append("image", imageFile);
-    if (audioFile) fd.append("audio", audioFile);
-    const res = await fetch(`${API_URL}/api/chat`, { method: "POST", body: fd });
-    return handle(res);
-  }
+// payload: { text, sessionId, sellerId }
+export async function sendChat({ text, sessionId, sellerId = 1 }) {
   const res = await fetch(`${API_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

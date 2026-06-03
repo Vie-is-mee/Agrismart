@@ -11,7 +11,7 @@ const INITIAL_MESSAGES = [
     role: "ai",
     text:
       "Xin chào! Cháu là trợ lý AI của AgriSmart.\n" +
-      "Cô/chú có thể: 🛒 tìm mua nông sản, 📢 đăng bán (gửi kèm ảnh sản phẩm), " +
+      "Cô/chú có thể: 🛒 tìm mua nông sản, 📢 đăng bán nông sản, " +
       "hoặc 🌱 hỏi kỹ thuật trồng trọt nhé!",
     time: "08:30",
   },
@@ -23,67 +23,21 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
-
-  // ảnh: giữ cả URL (để hiển thị) và File (để upload)
-  const [previewImg, setPreviewImg] = useState(null);
-  const [previewImgFile, setPreviewImgFile] = useState(null);
-  // audio: giữ URL + Blob
-  const [previewAudio, setPreviewAudio] = useState(null);
-  const [previewAudioBlob, setPreviewAudioBlob] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
+  const [postPreview, setPostPreview] = useState(null);   // { title, description, price, quantity, payload }
+  const [posting, setPosting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const hasUpdatedTimeRef = useRef(false);
   const sessionIdRef = useRef("sess-" + Math.random().toString(36).slice(2));
-  const fileRef = useRef();
   const bottomRef = useRef();
   const inputRef = useRef();
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
-  const recordingIntervalRef = useRef(null);
-  const streamRef = useRef(null);
 
   const now = () =>
     new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 
-  // ── Ghi âm ──
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-      const mr = new MediaRecorder(stream);
-      audioChunksRef.current = [];
-      mr.ondataavailable = (e) => audioChunksRef.current.push(e.data);
-      mr.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-        setPreviewAudio(URL.createObjectURL(blob));
-        setPreviewAudioBlob(blob);
-        if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
-      };
-      mr.start();
-      mediaRecorderRef.current = mr;
-      setIsRecording(true);
-      setRecordingTime(0);
-      recordingIntervalRef.current = setInterval(() => setRecordingTime((p) => p + 1), 1000);
-    } catch (err) {
-      alert("Không thể truy cập microphone. Vui lòng kiểm tra quyền truy cập.");
-      console.error(err);
-    }
-  };
-  const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      setRecordingTime(0);
-      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-    }
-  };
-  const formatTime = (s) =>
-    `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, analyzing]);
+  }, [messages, analyzing, postPreview]);
 
   useEffect(() => {
     if (open && !hasUpdatedTimeRef.current) {
@@ -96,37 +50,21 @@ export default function AIChatWidget() {
     }
   }, [open]);
 
-  useEffect(() => () => {
-    if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-  }, []);
-
   // ── Gửi tin nhắn tới backend ──
   async function sendText(e) {
     e.preventDefault();
     const text = input.trim();
-    if (!text && !previewImgFile && !previewAudioBlob) return;
+    if (!text) return;
     if (analyzing) return;
 
     const userMsg = {
       id: Date.now(),
       role: "user",
-      text: text || (previewAudioBlob ? "Tin nhắn thoại" : "Đã gửi ảnh sản phẩm"),
+      text,
       time: now(),
     };
-    if (previewImg) userMsg.image = previewImg;
-    if (previewAudio) userMsg.audio = previewAudio;
     setMessages((m) => [...m, userMsg]);
-
-    const imageFile = previewImgFile;
-    const audioFile = previewAudioBlob
-      ? new File([previewAudioBlob], "voice.wav", { type: "audio/wav" })
-      : null;
-
     setInput("");
-    setPreviewImg(null);
-    setPreviewImgFile(null);
-    setPreviewAudio(null);
-    setPreviewAudioBlob(null);
     setAnalyzing(true);
 
     try {
@@ -134,19 +72,32 @@ export default function AIChatWidget() {
         text,
         sessionId: sessionIdRef.current,
         sellerId: 1,
-        imageFile,
-        audioFile,
       });
-      setMessages((m) => [
-        ...m,
-        {
-          id: Date.now() + 1,
-          role: "ai",
-          text: res.message || "Dạ cháu chưa rõ ý cô/chú ạ.",
-          time: now(),
-          products: res.products || [],
-        },
-      ]);
+
+      // Nếu backend báo đã thu thập đủ thông tin → hiển thị preview bài đăng
+      if (res.type === "seller_ready_to_post" && res.payload) {
+        setMessages((m) => [
+          ...m,
+          {
+            id: Date.now() + 1,
+            role: "ai",
+            text: res.message || "Cháu đã chuẩn bị xong bài đăng cho cô/chú rồi ạ! Cô/chú xem và xác nhận đăng nhé 👇",
+            time: now(),
+          },
+        ]);
+        setPostPreview(res.payload);
+      } else {
+        setMessages((m) => [
+          ...m,
+          {
+            id: Date.now() + 1,
+            role: "ai",
+            text: res.message || "Dạ cháu chưa rõ ý cô/chú ạ.",
+            time: now(),
+            products: res.products || [],
+          },
+        ]);
+      }
     } catch (err) {
       setMessages((m) => [
         ...m,
@@ -165,12 +116,56 @@ export default function AIChatWidget() {
     }
   }
 
-  function handleImageChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setPreviewImg(URL.createObjectURL(file));
-    setPreviewImgFile(file);
-    e.target.value = "";
+  // ── Xác nhận đăng bài ──
+  async function confirmPost() {
+    if (!postPreview || posting) return;
+    setPosting(true);
+    try {
+      const res = await sendChat({
+        text: "__CONFIRM_POST__",
+        sessionId: sessionIdRef.current,
+        sellerId: 1,
+      });
+      setPostPreview(null);
+      setMessages((m) => [
+        ...m,
+        {
+          id: Date.now(),
+          role: "ai",
+          text: res.message || "✅ Bài đã được đăng lên shop của cô/chú thành công!",
+          time: now(),
+          isSuccess: true,
+        },
+      ]);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3500);
+    } catch (err) {
+      setMessages((m) => [
+        ...m,
+        {
+          id: Date.now(),
+          role: "ai",
+          text: "Dạ đăng bài thất bại, cô/chú thử lại sau nhé ạ. (" + err.message + ")",
+          time: now(),
+        },
+      ]);
+    } finally {
+      setPosting(false);
+    }
+  }
+
+  // ── Huỷ xem trước bài đăng ──
+  function cancelPost() {
+    setPostPreview(null);
+    setMessages((m) => [
+      ...m,
+      {
+        id: Date.now(),
+        role: "ai",
+        text: "Dạ cháu đã huỷ bài đăng rồi ạ. Cô/chú muốn chỉnh sửa thông tin nào thì nhắn lại cho cháu nhé!",
+        time: now(),
+      },
+    ]);
   }
 
   function renderText(t) {
@@ -230,13 +225,7 @@ export default function AIChatWidget() {
                   />
                 </div>
               )}
-              <div className={`ai-bubble ai-bubble--${msg.role}`}>
-                {msg.image && <img src={msg.image} alt="Ảnh sản phẩm" className="ai-bubble__image" />}
-                {msg.audio && (
-                  <audio controls className="ai-bubble__audio" controlsList="nodownload">
-                    <source src={msg.audio} type="audio/wav" />
-                  </audio>
-                )}
+              <div className={`ai-bubble ai-bubble--${msg.role}${msg.isSuccess ? " ai-bubble--success" : ""}`}>
                 <p className="ai-bubble__text">{renderText(msg.text)}</p>
 
                 {/* Danh sách sản phẩm trả về từ buyer-search */}
@@ -282,87 +271,98 @@ export default function AIChatWidget() {
                 <div className="ai-analyzing">
                   <span className="ai-analyzing__text">Cháu đang xử lý...</span>
                   <div className="ai-analyzing__dots">
-                    <span />
-                    <span />
-                    <span />
+                    <span /><span /><span />
                   </div>
                 </div>
               </div>
             </div>
           )}
+
+          {/* ── Preview bài đăng ── */}
+          {postPreview && (
+            <div className="ai-post-preview">
+              <div className="ai-post-preview__badge">📋 Xem trước bài đăng</div>
+
+              <div className="ai-post-preview__card">
+                <div className="ai-post-preview__header">
+                  <span className="ai-post-preview__tag">🌿 Nông sản tươi</span>
+                  <span className="ai-post-preview__shop">🏪 Shop của bạn</span>
+                </div>
+
+                <h3 className="ai-post-preview__title">{postPreview.title}</h3>
+
+                <div className="ai-post-preview__meta-row">
+                  <div className="ai-post-preview__meta-item">
+                    <span className="ai-post-preview__meta-icon">💰</span>
+                    <div>
+                      <div className="ai-post-preview__meta-label">Giá bán</div>
+                      <div className="ai-post-preview__meta-value ai-post-preview__price">
+                        {Number(postPreview.final_price || 0).toLocaleString("vi-VN")}đ
+                        <span className="ai-post-preview__unit">/kg</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="ai-post-preview__meta-item">
+                    <span className="ai-post-preview__meta-icon">📦</span>
+                    <div>
+                      <div className="ai-post-preview__meta-label">Số lượng</div>
+                      <div className="ai-post-preview__meta-value">
+                        {Number(postPreview.quantity || 0).toLocaleString("vi-VN")} kg
+                      </div>
+                    </div>
+                  </div>
+                  {postPreview.location && (
+                    <div className="ai-post-preview__meta-item">
+                      <span className="ai-post-preview__meta-icon">📍</span>
+                      <div>
+                        <div className="ai-post-preview__meta-label">Nguồn gốc</div>
+                        <div className="ai-post-preview__meta-value">{postPreview.location}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="ai-post-preview__desc">
+                  <div className="ai-post-preview__desc-label">📝 Mô tả sản phẩm</div>
+                  <p className="ai-post-preview__desc-text">{postPreview.description}</p>
+                </div>
+
+                <div className="ai-post-preview__footer-info">
+                  <span>✅ Sẵn sàng đăng lên shop</span>
+                  <span>🤖 AI biên soạn</span>
+                </div>
+              </div>
+
+              <div className="ai-post-preview__actions">
+                <button
+                  className="ai-post-preview__confirm-btn"
+                  onClick={confirmPost}
+                  disabled={posting}
+                >
+                  {posting ? (
+                    <>
+                      <span className="ai-post-preview__spinner" />
+                      Đang đăng bài...
+                    </>
+                  ) : (
+                    <>🚀 Đăng bài lên shop</>
+                  )}
+                </button>
+                <button
+                  className="ai-post-preview__cancel-btn"
+                  onClick={cancelPost}
+                  disabled={posting}
+                >
+                  ✏️ Chỉnh sửa lại
+                </button>
+              </div>
+            </div>
+          )}
+
           <div ref={bottomRef} />
         </div>
 
         <div className="ai-chat__footer">
-          {previewImg && (
-            <div className="ai-chat__preview-area">
-              <img src={previewImg} alt="Preview" className="ai-chat__preview-img" />
-              <button
-                className="ai-chat__preview-close"
-                onClick={() => {
-                  setPreviewImg(null);
-                  setPreviewImgFile(null);
-                }}
-                title="Xóa ảnh"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-
-          {previewAudio && (
-            <div className="ai-chat__preview-area ai-chat__preview-area--audio">
-              <audio controls className="ai-chat__preview-audio" controlsList="nodownload">
-                <source src={previewAudio} type="audio/wav" />
-              </audio>
-              <button
-                className="ai-chat__preview-close"
-                onClick={() => {
-                  setPreviewAudio(null);
-                  setPreviewAudioBlob(null);
-                }}
-                title="Xóa ghi âm"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-
-          <div className="ai-chat__attach-area">
-            <button
-              className="ai-chat__camera-btn"
-              onClick={() => fileRef.current?.click()}
-              title="Đính kèm hình ảnh sản phẩm"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                <circle cx="12" cy="13" r="4" />
-              </svg>
-              <span>Đính kèm ảnh</span>
-            </button>
-
-            {isRecording ? (
-              <button className="ai-chat__record-btn ai-chat__record-btn--active" onClick={stopRecording} title="Dừng ghi âm">
-                <span className="ai-chat__record-pulse"></span>
-                <span className="ai-chat__record-time">{formatTime(recordingTime)}</span>
-              </button>
-            ) : (
-              <button className="ai-chat__record-btn" onClick={startRecording} title="Ghi âm giọng nói">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"
-                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 1a3 3 0 0 0-3 3v12a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                  <line x1="12" y1="19" x2="12" y2="23" />
-                  <line x1="8" y1="23" x2="16" y2="23" />
-                </svg>
-                <span>Ghi âm</span>
-              </button>
-            )}
-
-            <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageChange} />
-          </div>
-
           <form className="ai-chat__input-row" onSubmit={sendText}>
             <input
               ref={inputRef}
@@ -375,7 +375,7 @@ export default function AIChatWidget() {
             <button
               className="ai-chat__send-btn"
               type="submit"
-              disabled={analyzing || (!input.trim() && !previewImgFile && !previewAudioBlob)}
+              disabled={analyzing || !input.trim()}
               aria-label="Gửi"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -385,6 +385,12 @@ export default function AIChatWidget() {
           </form>
         </div>
       </div>
+
+      {showSuccess && (
+        <div className="ai-success-toast">
+          🎉 Bài đăng đã lên shop thành công!
+        </div>
+      )}
     </>
   );
 }

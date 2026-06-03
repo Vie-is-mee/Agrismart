@@ -3,7 +3,7 @@ app.py — REST API AgriSmart (Flask).
 
 Endpoints:
   GET  /api/health
-  POST /api/chat                (text JSON  hoặc  multipart: text + image)
+  POST /api/chat                (JSON: { text, session_id, seller_id })
   POST /api/auth/register
   POST /api/auth/login
   GET  /api/products            (?category= &q=)
@@ -14,8 +14,6 @@ Chạy:  python app.py   →   http://localhost:5000
 """
 
 import os
-import uuid
-import tempfile
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -26,7 +24,7 @@ from flask_cors import CORS
 from database import init_db, db_cursor, row_to_dict, hash_password, verify_password
 from chatbot import AgriChatbot, AI_ENABLED
 
-# ── Khởi tạo DB (tạo + seed nếu chưa có) ─────────────────────────────────────
+# ── Khởi tạo DB ───────────────────────────────────────────────────────────────
 init_db()
 
 app = Flask(__name__)
@@ -35,9 +33,6 @@ CORS(app, origins=[
     "http://localhost:3000",
     "https://agrismart-azure.vercel.app/"  # URL Vercel của bạn
 ])
-
-UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Mỗi "session" giữ 1 chatbot riêng để nhớ trạng thái thu thập của người bán.
 _bots: dict = {}
@@ -49,61 +44,39 @@ def get_bot(session_id: str, seller_user_id: int = 1) -> AgriChatbot:
     return _bots[session_id]
 
 
-# ── HEALTH ───────────────────────────────────────────────────────────────────
+# ── HEALTH ────────────────────────────────────────────────────────────────────
 @app.get("/api/health")
 def health():
     return jsonify({"status": "ok", "ai_enabled": AI_ENABLED})
 
 
-# ── CHAT ─────────────────────────────────────────────────────────────────────
+# ── CHAT ──────────────────────────────────────────────────────────────────────
 @app.post("/api/chat")
 def chat():
     """
-    Hai cách gọi:
-      1) JSON:       { "text": "...", "session_id": "...", "seller_id": 1 }
-      2) multipart:  fields text/session_id/seller_id + file 'image'
+    Nhận JSON: { "text": "...", "session_id": "...", "seller_id": 1 }
+    Trả về JSON kết quả từ chatbot.
     """
-    image_path = None
-    voice_path = None
     try:
-        if request.content_type and "multipart/form-data" in request.content_type:
-            text = request.form.get("text", "")
-            session_id = request.form.get("session_id", "default")
-            seller_id = int(request.form.get("seller_id", 1) or 1)
-            file = request.files.get("image")
-            if file and file.filename:
-                ext = os.path.splitext(file.filename)[1] or ".jpg"
-                image_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4().hex}{ext}")
-                file.save(image_path)
-            audio = request.files.get("audio")  # tùy chọn (cần SpeechRecognition)
-            if audio and audio.filename:
-                ext = os.path.splitext(audio.filename)[1] or ".wav"
-                voice_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4().hex}{ext}")
-                audio.save(voice_path)
-        else:
-            data = request.get_json(silent=True) or {}
-            text = data.get("text", "")
-            session_id = data.get("session_id", "default")
-            seller_id = int(data.get("seller_id", 1) or 1)
+        data       = request.get_json(silent=True) or {}
+        text       = data.get("text", "")
+        session_id = data.get("session_id", "default")
+        seller_id  = int(data.get("seller_id", 1) or 1)
 
-        bot = get_bot(session_id, seller_user_id=seller_id)
-        result = bot.process(text_input=text or None, image_path=image_path, voice_path=voice_path)
+        bot    = get_bot(session_id, seller_user_id=seller_id)
+        result = bot.process(text_input=text or None)
         return jsonify(result)
+
     except Exception as exc:
         print(f"  [API] /api/chat error: {exc}")
-        return jsonify({"type": "error",
-                        "message": "Dạ có lỗi xảy ra phía máy chủ, cô/chú thử lại sau nhé ạ.",
-                        "products": []}), 500
-    finally:
-        for p in (image_path, voice_path):
-            if p and os.path.exists(p):
-                try:
-                    os.remove(p)
-                except Exception:
-                    pass
+        return jsonify({
+            "type":     "error",
+            "message":  "Dạ có lỗi xảy ra phía máy chủ, cô/chú thử lại sau nhé ạ.",
+            "products": [],
+        }), 500
 
 
-# ── AUTH ─────────────────────────────────────────────────────────────────────
+# ── AUTH ──────────────────────────────────────────────────────────────────────
 def _user_public(row) -> dict:
     d = row_to_dict(row)
     d.pop("password_hash", None)
@@ -113,13 +86,13 @@ def _user_public(row) -> dict:
 
 @app.post("/api/auth/register")
 def register():
-    data = request.get_json(silent=True) or {}
-    name = (data.get("name") or "").strip()
-    phone = (data.get("phone") or "").strip()
+    data     = request.get_json(silent=True) or {}
+    name     = (data.get("name") or "").strip()
+    phone    = (data.get("phone") or "").strip()
     password = data.get("password") or ""
-    role = data.get("role") or "buyer"
-    address = data.get("address")
-    coop = data.get("cooperative_name")
+    role     = data.get("role") or "buyer"
+    address  = data.get("address")
+    coop     = data.get("cooperative_name")
 
     if not name or not phone or not password:
         return jsonify({"error": "Thiếu họ tên, số điện thoại hoặc mật khẩu."}), 400
@@ -146,8 +119,8 @@ def register():
 
 @app.post("/api/auth/login")
 def login():
-    data = request.get_json(silent=True) or {}
-    phone = (data.get("phone") or "").strip()
+    data     = request.get_json(silent=True) or {}
+    phone    = (data.get("phone") or "").strip()
     password = data.get("password") or ""
     if not phone or not password:
         return jsonify({"error": "Vui lòng nhập số điện thoại và mật khẩu."}), 400
@@ -164,11 +137,11 @@ def login():
         return jsonify({"error": "Lỗi máy chủ khi đăng nhập."}), 500
 
 
-# ── PRODUCTS ─────────────────────────────────────────────────────────────────
+# ── PRODUCTS ──────────────────────────────────────────────────────────────────
 @app.get("/api/products")
 def list_products():
     category = request.args.get("category")
-    q = request.args.get("q")
+    q        = request.args.get("q")
     conds, params = [], []
     if category and category != "all":
         conds.append("category = ?"); params.append(category)
@@ -204,7 +177,7 @@ def get_product(pid):
         return jsonify({"error": "Lỗi máy chủ."}), 500
 
 
-# ── MARKET PRICE ─────────────────────────────────────────────────────────────
+# ── MARKET PRICE ──────────────────────────────────────────────────────────────
 @app.get("/api/market-price")
 def market_price():
     name = request.args.get("name", "")
@@ -222,7 +195,7 @@ def market_price():
         if not row:
             return jsonify({"found": False})
         d = row_to_dict(row)
-        d["found"] = True
+        d["found"]     = True
         d["avg_price"] = (d["min_price"] + d["max_price"]) / 2.0
         return jsonify(d)
     except Exception as exc:

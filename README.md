@@ -1,117 +1,149 @@
-# AgriSmart — Sàn nông sản + Trợ lý AI
+# 🌿 AgriSmart — Chợ Nông Sản Thông Minh
 
-Dự án gồm 3 phần đã được **kết nối hoàn chỉnh**:
-
-| Thư mục      | Vai trò                                                                 |
-|--------------|-------------------------------------------------------------------------|
-| `frontend/`  | Giao diện React (cửa hàng, giỏ hàng, đăng nhập/đăng ký, widget chat AI) |
-| `backend/`   | API Flask + chatbot Gemini (`google-genai`)                             |
-| `db/`        | Cơ sở dữ liệu **SQLite** (tự tạo khi chạy lần đầu)                       |
-
-Phần đã nối với nhau:
-- **Widget Chat AI** (frontend) → `POST /api/chat` → Gemini + truy vấn SQLite (tìm sản phẩm, giá thị trường, kiến thức cây trồng, đăng tin bán).
-- **Đăng nhập / Đăng ký** (frontend) → `POST /api/auth/*` → bảng `Users` (mật khẩu băm PBKDF2).
-- Duyệt cửa hàng/sản phẩm vẫn dùng dữ liệu tĩnh trong `frontend/src/data` nên **chạy được kể cả khi không có khóa Gemini**. DB đã seed 13 sản phẩm trùng id với frontend, nên kết quả chatbot bấm vào ra đúng trang `/product/{id}`.
+Nền tảng thương mại điện tử nông sản tích hợp AI Gemini, hỗ trợ người nông dân đăng bán sản phẩm và người mua tìm kiếm nông sản chất lượng.
 
 ---
 
-## Yêu cầu môi trường
-- **Python** ≥ 3.10
-- **Node.js** ≥ 16 (kèm npm)
-- Không cần cài SQL Server / ODBC — đã chuyển sang SQLite.
+## ✨ Tính năng nổi bật
+
+### 🤖 AI Chatbot (AIChatWidget)
+- **Tìm mua nông sản**: Chatbot hiểu ngôn ngữ tự nhiên, tìm kiếm sản phẩm theo tên, giá, vùng, số lượng
+- **Đăng bán nông sản**: Flow thu thập thông tin thông minh — chatbot tự hỏi từng bước:
+  1. Tên nông sản cần bán
+  2. Địa điểm (tỉnh/thành)
+  3. Số lượng (kg, yến, tạ, tấn)
+  4. Giá bán (VND/kg)
+  5. Tiêu chuẩn/chất lượng sản phẩm
+  - Sau khi đủ thông tin → AI tự động soạn **bài đăng hấp dẫn** (tiêu đề, mô tả)
+  - Hiển thị **preview bài đăng** đẹp để người bán xem trước
+  - Nhấn **"Đăng bài lên shop"** → bài đăng xuất hiện ngay trên sàn
+- **Hỏi kỹ thuật nông nghiệp**: RAG từ cơ sở tri thức cây trồng (VietGAP, chăm sóc, bảo quản)
+- **Kiểm tra giá thị trường**: Tham chiếu giá thực tế theo vùng và tiêu chuẩn
+
+### 🛒 Sàn thương mại
+- Duyệt, tìm kiếm, lọc nông sản theo danh mục
+- Giỏ hàng, thanh toán
+- Trang chi tiết sản phẩm với đánh giá
+- Shop dashboard cho người bán
 
 ---
 
-## 1. Chạy Backend
+## 🗂️ Cấu trúc dự án
+
+```
+AgriSmart/
+├── frontend/          # React 18
+│   └── src/
+│       ├── components/
+│       │   ├── AIChatWidget.js    # Chatbot UI (text-only, có post preview)
+│       │   └── AIChatWidget.css
+│       ├── pages/
+│       ├── services/api.js        # Gọi REST API
+│       └── ...
+├── backend/           # Python Flask
+│   ├── app.py         # REST API endpoints
+│   ├── chatbot.py     # Logic AI + flow đăng bài
+│   ├── database.py    # SQLite helpers
+│   └── requirements.txt
+└── db/
+    ├── schema.sql
+    └── seed.sql
+```
+
+---
+
+## 🚀 Khởi động nhanh
+
+### Backend (Python 3.9+)
 
 ```bash
 cd backend
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Tạo file .env từ mẫu rồi điền khóa Gemini
+# Tạo file .env
 cp .env.example .env
-#   → mở .env, dán GEMINI_API_KEY (lấy tại https://aistudio.google.com/apikey)
+# Điền GEMINI_API_KEY vào .env
 
 python app.py
+# → http://localhost:5000
 ```
 
-Backend chạy ở `http://localhost:5000`.
-- Lần đầu chạy sẽ **tự tạo** `db/agrieco.db` và nạp dữ liệu mẫu.
-- Kiểm tra nhanh: mở `http://localhost:5000/api/health` → thấy `{"status":"ok", ...}`.
-
-> **Không có khóa Gemini vẫn chạy được:** server vẫn lên, các API sản phẩm/đăng nhập hoạt động bình thường; chỉ riêng chat AI sẽ trả thông báo "AI đang tắt". Điền `GEMINI_API_KEY` vào `.env` để bật chat.
-
----
-
-## 2. Chạy Frontend
-
-Mở **một cửa sổ terminal khác**:
+### Frontend (Node.js 16+)
 
 ```bash
 cd frontend
 npm install
 npm start
-```
-
-Trình duyệt tự mở `http://localhost:3000`.
-File `frontend/.env` đã trỏ sẵn `REACT_APP_API_URL=http://localhost:5000`. Nếu đổi cổng backend thì sửa lại file này.
-
----
-
-## 3. Tài khoản demo (mật khẩu chung: `123456`)
-
-| Số điện thoại | Vai trò   | Ghi chú                          |
-|---------------|-----------|----------------------------------|
-| `0900000001`  | Người bán | HTX Vườn Trái Cây Cao Phong      |
-| `0900000002`  | Người bán | (khớp với các gian hàng frontend)|
-| `0900000003`  | Người bán |                                  |
-| `0900000004`  | Người bán |                                  |
-| `0900000005`  | Người bán |                                  |
-| `0911111111`  | Người mua |                                  |
-| `0999999999`  | Admin     |                                  |
-
-Hoặc bấm **Đăng Ký** để tạo tài khoản mới (người mua / người bán).
-
----
-
-## 4. Thử nhanh trợ lý AI (cần khóa Gemini)
-
-Mở widget chat ở góc phải, thử:
-- *"Tôi muốn mua xoài ở Tiền Giang"* → trả về sản phẩm + link sang trang chi tiết.
-- *"Giá thanh long hiện nay bao nhiêu?"* → tra bảng `Market_Prices`.
-- *"Cách trồng sầu riêng?"* → tra `Crop_Knowledge` (RAG).
-- Gửi kèm ảnh nông sản để AI nhận diện.
-
----
-
-## Cấu trúc thư mục
-
-```
-AgriSmart/
-├── backend/
-│   ├── app.py              # Flask API
-│   ├── chatbot.py          # Logic chatbot Gemini
-│   ├── database.py         # SQLite: tạo bảng, seed, băm mật khẩu
-│   ├── requirements.txt
-│   └── .env.example
-├── db/
-│   ├── schema.sql          # Cấu trúc bảng (SQLite)
-│   ├── seed.sql            # Dữ liệu mẫu
-│   ├── final_sqlserver.sql # Bản gốc SQL Server (chỉ để tham khảo)
-│   └── agrieco.db          # (tự sinh khi chạy backend)
-└── frontend/
-    ├── .env
-    └── src/
-        ├── services/api.js          # Lớp gọi API
-        ├── components/AIChatWidget.js
-        └── components/LoginModal.js
+# → http://localhost:3000
 ```
 
 ---
 
-## Khắc phục sự cố
+## ⚙️ Biến môi trường
 
-- **Chat báo "AI đang tắt":** chưa điền `GEMINI_API_KEY` trong `backend/.env`.
-- **Frontend không gọi được API / lỗi CORS:** kiểm tra backend đã chạy ở cổng 5000 và `frontend/.env` trỏ đúng URL.
-- **Muốn tạo lại DB từ đầu:** xóa `db/agrieco.db` rồi chạy lại `python app.py` (hoặc `python backend/database.py`).
-- **Đổi giới hạn chat / model:** sửa `MAX_CHATS_PER_DAY`, `COOLDOWN_SECONDS`, `GEMINI_MODEL` trong `backend/.env`.
+**backend/.env**
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+MAX_CHATS_PER_DAY=20
+COOLDOWN_SECONDS=12
+```
+
+**frontend/.env**
+```
+REACT_APP_API_URL=http://localhost:5000
+```
+
+---
+
+## 🔄 Flow đăng bán sản phẩm qua Chatbot
+
+```
+Người bán nhắn: "Tôi muốn bán xoài"
+        ↓
+AI hỏi: "Cô/chú ở tỉnh/thành nào ạ?"
+        ↓
+AI hỏi: "Có bao nhiêu kg cần bán ạ?"
+        ↓
+AI hỏi: "Cô/chú bán giá bao nhiêu đ/kg?"
+        ↓
+AI hỏi: "Tiêu chuẩn sản phẩm thế nào ạ?"
+        ↓
+AI soạn bài đăng → Hiển thị PREVIEW đẹp
+        ↓
+Người bán nhấn [🚀 Đăng bài lên shop]
+        ↓
+Bài đăng lên sàn ✅
+```
+
+---
+
+## 📡 API Endpoints
+
+| Method | Path | Mô tả |
+|--------|------|-------|
+| GET | `/api/health` | Kiểm tra trạng thái server |
+| POST | `/api/chat` | Gửi tin nhắn chatbot |
+| POST | `/api/auth/register` | Đăng ký tài khoản |
+| POST | `/api/auth/login` | Đăng nhập |
+| GET | `/api/products` | Danh sách sản phẩm |
+| GET | `/api/products/<id>` | Chi tiết sản phẩm |
+| GET | `/api/market-price?name=` | Giá thị trường |
+
+### POST /api/chat
+```json
+{
+  "text": "Tôi muốn bán 100kg xoài cát Tiền Giang",
+  "session_id": "user-session-abc",
+  "seller_id": 1
+}
+```
+
+**Các loại response:**
+- `seller_collecting` — AI đang hỏi thêm thông tin
+- `seller_ready_to_post` — Đủ thông tin, có `payload` để preview
+- `seller_posted` — Đã đăng bài thành công
+- `buyer_result` — Kết quả tìm sản phẩm
+- `rag_answer` — Trả lời kỹ thuật nông nghiệp
