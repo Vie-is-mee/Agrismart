@@ -31,7 +31,7 @@ app = Flask(__name__)
 # Thay dòng CORS(app) hiện tại bằng:
 CORS(app, origins=[
     "http://localhost:3000",
-    "https://agrismart-azure.vercel.app/"  # URL Vercel của bạn
+    "https://agrismart-azure.vercel.app"  # URL Vercel của bạn
 ])
 
 # Mỗi "session" giữ 1 chatbot riêng để nhớ trạng thái thu thập của người bán.
