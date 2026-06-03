@@ -1,12 +1,12 @@
-# 🌿 AgriSmart — Chợ Nông Sản Thông Minh
+# AgriSmart — Chợ Nông Sản Thông Minh
 
 Nền tảng thương mại điện tử nông sản tích hợp AI Gemini, hỗ trợ người nông dân đăng bán sản phẩm và người mua tìm kiếm nông sản chất lượng.
 
 ---
 
-## ✨ Tính năng nổi bật
+## Tính năng nổi bật
 
-### 🤖 AI Chatbot (AIChatWidget)
+### AI Chatbot (AIChatWidget)
 - **Tìm mua nông sản**: Chatbot hiểu ngôn ngữ tự nhiên, tìm kiếm sản phẩm theo tên, giá, vùng, số lượng
 - **Đăng bán nông sản**: Flow thu thập thông tin thông minh — chatbot tự hỏi từng bước:
   1. Tên nông sản cần bán
@@ -20,7 +20,7 @@ Nền tảng thương mại điện tử nông sản tích hợp AI Gemini, hỗ
 - **Hỏi kỹ thuật nông nghiệp**: RAG từ cơ sở tri thức cây trồng (VietGAP, chăm sóc, bảo quản)
 - **Kiểm tra giá thị trường**: Tham chiếu giá thực tế theo vùng và tiêu chuẩn
 
-### 🛒 Sàn thương mại
+### Sàn thương mại
 - Duyệt, tìm kiếm, lọc nông sản theo danh mục
 - Giỏ hàng, thanh toán
 - Trang chi tiết sản phẩm với đánh giá
@@ -28,7 +28,7 @@ Nền tảng thương mại điện tử nông sản tích hợp AI Gemini, hỗ
 
 ---
 
-## 🗂️ Cấu trúc dự án
+## Cấu trúc dự án
 
 ```
 AgriSmart/
@@ -52,7 +52,7 @@ AgriSmart/
 
 ---
 
-## 🚀 Khởi động nhanh
+## Khởi động nhanh
 
 ### Backend (Python 3.9+)
 
@@ -81,7 +81,7 @@ npm start
 
 ---
 
-## ⚙️ Biến môi trường
+## Biến môi trường
 
 **backend/.env**
 ```
@@ -98,7 +98,7 @@ REACT_APP_API_URL=http://localhost:5000
 
 ---
 
-## 🔄 Flow đăng bán sản phẩm qua Chatbot
+## Flow đăng bán sản phẩm qua Chatbot
 
 ```
 Người bán nhắn: "Tôi muốn bán xoài"
@@ -113,14 +113,14 @@ AI hỏi: "Tiêu chuẩn sản phẩm thế nào ạ?"
         ↓
 AI soạn bài đăng → Hiển thị PREVIEW đẹp
         ↓
-Người bán nhấn [🚀 Đăng bài lên shop]
+Người bán nhấn [Đăng bài lên shop]
         ↓
-Bài đăng lên sàn ✅
+Bài đăng lên sàn
 ```
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 | Method | Path | Mô tả |
 |--------|------|-------|
