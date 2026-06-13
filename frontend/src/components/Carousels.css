@@ -96,29 +96,30 @@
 .carousel__btn {
   display: inline-block;
   padding: 13px 28px;
-  border-radius: 99px;
+  border-radius: 12px;
   font-weight: 700;
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--transition);
 }
 
 .carousel__btn--primary {
-  background: #3a8a4a;
+  background: var(--green-main);
   color: #fff;
-  box-shadow: 0 4px 18px rgba(58, 138, 74, 0.45);
+  box-shadow: 0 4px 14px rgba(16, 138, 86, 0.35);
 }
 
 .carousel__btn--primary:hover {
+  background: var(--green-mid);
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(58, 138, 74, 0.6);
+  box-shadow: 0 6px 20px rgba(16, 138, 86, 0.5);
 }
 
 .carousel__btn--outline {
   background: transparent;
   color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
 }
 
 .carousel__btn--outline:hover {
@@ -196,7 +197,7 @@
 
 .carousel__progress-fill {
   height: 100%;
-  background: #3a8a4a;
+  background: var(--green-main);
   animation: carousel-progress 5s linear forwards;
 }
 
