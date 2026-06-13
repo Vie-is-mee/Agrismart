@@ -138,20 +138,22 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 36px 24px;
-  width: 200px;
-  background: var(--cat-bg, var(--green-pale));
-  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  width: 180px;
+  background: var(--white);
+  border-radius: 16px;
   text-decoration: none;
   color: var(--text-dark);
-  border: 2px solid transparent;
+  border: 1px solid rgba(16, 138, 86, 0.05);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition);
   cursor: pointer;
 }
-.category-card--all { background: var(--green-pale); }
+.category-card--all { background: var(--white); }
 .category-card:hover {
   border-color: var(--green-main);
-  transform: translateY(-5px);
+  background: var(--cat-bg, var(--green-pale));
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 .category-card__emoji { font-size: 3.2rem; }
@@ -219,12 +221,18 @@
   flex-shrink: 0;
 }
 .stat-card {
-  background: rgba(255,255,255,0.12);
-  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 24px 20px;
   text-align: center;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: var(--transition);
+}
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
 .stat-card__num {
   display: block;
@@ -259,8 +267,8 @@
 .newsletter__form { display: flex; gap: 10px; flex-wrap: wrap; }
 .newsletter__input {
   padding: 12px 20px;
-  border: 2px solid var(--green-light);
-  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(16, 138, 86, 0.15);
+  border-radius: 12px;
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
@@ -268,7 +276,10 @@
   background: white;
   transition: var(--transition);
 }
-.newsletter__input:focus { border-color: var(--green-main); }
+.newsletter__input:focus { 
+  border-color: var(--green-main); 
+  box-shadow: 0 0 0 4px rgba(16, 138, 86, 0.1);
+}
 
 @media (max-width: 768px) {
   .hero__content { flex-direction: column; text-align: center; padding: 40px 20px; }
